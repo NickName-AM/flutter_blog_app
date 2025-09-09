@@ -18,7 +18,7 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     return _getUser(
-      () => remoteDataSource.signUpWithEmailPassword(
+      () async => await remoteDataSource.signUpWithEmailPassword(
         name: name,
         email: email,
         password: password,
@@ -32,11 +32,26 @@ class AuthRepositoryImpl implements AuthRepository {
     required String password,
   }) async {
     return _getUser(
-      () => remoteDataSource.signInWithEmailPassword(
+      () async => await remoteDataSource.signInWithEmailPassword(
         email: email,
         password: password,
       ),
     );
+  }
+
+  @override
+  Future<Either<Failure, User>> currentUser() async {
+    try {
+      final user = await remoteDataSource.getCurrentUserData();
+
+      if (user == null) {
+        return left(Failure('User is not logged in.'));
+      }
+
+      return right(user);
+    } on ServerException catch (e) {
+      return left(Failure(e.toString()));
+    }
   }
 }
 
