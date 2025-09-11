@@ -1,4 +1,4 @@
-import 'package:flutter_blog_app/features/auth/domain/entities/user.dart';
+import 'package:flutter_blog_app/core/common/entities/user.dart';
 
 class UserModel extends User {
   UserModel({required super.id, required super.name, required super.email});
